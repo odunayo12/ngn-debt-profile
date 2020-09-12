@@ -122,5 +122,5 @@ for x in file_addresses:
 
 # %%
 my_list = [1, 2, 3]
-new_list = [x, ", Event"+1 for x in my_list]
-new_list
+# new_list = [x, ", Event"+1 for x in my_list]
+# new_list
