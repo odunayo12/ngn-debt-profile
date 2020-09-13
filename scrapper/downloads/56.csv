@@ -1,0 +1,8 @@
+Debt Category,"Amount Outstanding inUSD","Amount Outstanding inNGN",
+A.,External Debt Stock (FGN + States),"10,617.35","2,091,087.08"
+"",Domestic Debt Stock (FGN Only),"43,727.99","8,612,228.36"
+"",Sub-Total,"54,345.34","10,703,315.44"
+B.,,,
+"",Domestic Debt of States*,"9,852.25","1,655,178.71"
+C.,,,
+Grand-Total (A+B),"64,197.60","12,358,494.15",
