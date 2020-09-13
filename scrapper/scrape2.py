@@ -1,9 +1,11 @@
 # %%
+import tabula
 import urllib
 import urllib.request
 from bs4 import BeautifulSoup
 import os
-
+import json
+import csv
 # %%
 
 
@@ -24,7 +26,7 @@ fileDir = os.path.dirname(os.path.realpath('__file__'))
 # %%
 
 # %%
-for record in soup.findAll('span', {'class', 'whitespace_preserver'}):
+for record in soup.table.findAll('span', {'class', 'whitespace_preserver'}):
     # print(record.text)
     for data in record.findAll('a'):
         #print('https://www.dmo.gov.ng' + data.get('href'))
@@ -34,10 +36,10 @@ for record in soup.findAll('span', {'class', 'whitespace_preserver'}):
         # print(pdf)
 
         try:
-            pdf_title = data.get('title')
+            pdf_title = data.get('data-id') + '.pdf'
         except TypeError:
             # if pdf_title == "":
-            filename = str(i)
+            pdf_title = str(i)
             i = i+1 + ".pdf"
         else:
             filename = pdf_title
@@ -46,6 +48,14 @@ for record in soup.findAll('span', {'class', 'whitespace_preserver'}):
         pdf_file = open(filepath, "wb")
         pdf_file.write(urllib.request.urlopen(pdf).read())
         pdf_file.close()
+
+
+# %%
+files_dir = os.path.join(fileDir, "downloads")
+files_dir
+files_dir2 = "C:/Users/rotim/OneDrive - bwedu/Web Developmnet/ngn-debt-profile/scrapper/downloads"
+# %%
+tabula.convert_into_by_batch(files_dir, output_format='csv', pages=all)
 
 
 # %%
