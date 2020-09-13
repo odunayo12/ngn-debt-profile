@@ -30,18 +30,20 @@ for record in soup.findAll('span', {'class', 'whitespace_preserver'}):
         #print('https://www.dmo.gov.ng' + data.get('href'))
         # print(data.text)
         #pdf = data.get('title')
-        pdf = 'https://www.dmo.gov.ng' + data.get('href')
+        pdf = 'https://www.dmo.gov.ng' + data.get('href') + "/file"
         # print(pdf)
 
-        pdf_title = data.get('title')
-        if pdf_title == "":
+        try:
+            pdf_title = data.get('title')
+        except TypeError:
+            # if pdf_title == "":
             filename = str(i)
             i = i+1 + ".pdf"
         else:
             filename = pdf_title
             filepath = os.path.join(fileDir, "downloads", filename)
 
-        pdf_file = open(filename, "wb")
+        pdf_file = open(filepath, "wb")
         pdf_file.write(urllib.request.urlopen(pdf).read())
         pdf_file.close()
 
