@@ -7,6 +7,8 @@ from bs4 import BeautifulSoup
 import os
 import json
 import csv
+import pandas
+from dateutil.parser import ParserError
 # %% page fetcher function
 
 
@@ -65,8 +67,35 @@ for record in soup.table.findAll('span', {'class', 'whitespace_preserver'}):
             tabula.convert_into(pdf_filepath, csv_filepath,
                                 lattice=True,  output_format="csv", pages="all")
 
+# %%
+files_dir = os.path.join(fileDir, "downloads")
+# files_dir
+# %%
+all_csv_files = glob.glob(os.path.join(files_dir, '*.csv'))
+# all_files
+df_from_file = [item for item in all_csv_files]
+#csv_merge = pandas.concat([pandas.read_csv(f) for f in df_from_file], ignore_index=True)
 
-# # %%
+# %%
+li = []
+
+for each_file in all_csv_files:
+    csv_merge = pandas.read_csv(
+        each_file, sep=',', encoding='unicode_escape', error_bad_lines=False)
+    csv_merge['file'] = each_file.split('/')[-1]
+    li.append(csv_merge)
+
+all_merged = pandas.concat(li)
+all_merged.to_csv(os.path.join(files_dir, 'merged.csv'))
+# all_merged.tail(n=10)
+
+# https://realpython.com/python-data-cleaning-numpy-pandas/
+
+
+# %%
+# csv_merge = pandas.read_csv(df_from_file, sep=',',
+#                             encoding='unicode_escape', error_bad_lines=False)
+# csv_merge
 # files_dir = os.path.join(fileDir, "downloads")
 # files_dir
 # files_dir2 = "C:/Users/rotim/OneDrive - bwedu/Web Developmnet/ngn-debt-profile/scrapper/downloads"
@@ -87,3 +116,5 @@ for record in soup.table.findAll('span', {'class', 'whitespace_preserver'}):
 #     tabula.convert_into(pdf_filepath, csv_filepath,
 #                         lattice=True,  output_format="csv", pages="all")
 # # %%
+
+# %%
