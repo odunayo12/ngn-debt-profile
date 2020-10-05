@@ -1,3 +1,6 @@
+# History files
+.Rhistory
+.Rapp.history
 
 .vscode
 #git push debt master
@@ -140,10 +143,6 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 .Rproj.user
-
-# History files
-.Rhistory
-.Rapp.history
 
 # Session Data files
 .RData
