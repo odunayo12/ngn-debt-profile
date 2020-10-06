@@ -1,16 +1,9 @@
-Debt Category
-Debt Category
-Debt Category,,Amount Outstanding,,,Amount Outstanding,
-Debt Category,in USD,in NGN,,,,
-A.   External Debt (FGN +States + FCT ),,"22,083.4",,,"6,750,907.61",
-.   External Debt (FGN +States + FCT ),,,,,,
-B.   Domestic Debt (FGN Only),"39,749.55","12,151,437.66",,,,
-C.   Domestic Debt (States + FCT),,,,,,
-.   Domestic Debt (States + FCT),"11,374.9","3,477,321.00",,,,
-D.  Sub-Total � Domestic Debt (FGN + States + FCT),"51,124.50","15,628,758.66",,,,
-E. Total (A+D),,,,,,
-. Total (A+D),"73,207.94","22,379,666.27",,,,
-A.   External Debt (FGN +States + FCT )
-.   External Debt (FGN +States + FCT )
-C.   Domestic Debt (States + FCT)
-.   Domestic Debt (States + FCT)
+﻿Debt Category,"Amount
+Outstanding
+(US$’M)","Amount
+Outstanding
+(N’M)"
+FGN + States & FCT only,"25,609.63","7,860,875.93"
+Total Domestic Debt,"55,664.46","17,086,204.66"
+FGN Only,"42,721.68","13,113,420.29"
+States & FCT,"12,942.77","3,972,784.37"
