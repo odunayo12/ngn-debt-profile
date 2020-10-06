@@ -23,6 +23,7 @@ soup = make_soup(
     'https://www.dmo.gov.ng/debt-profile/total-public-debt?filter%5Bsearch%5D=&limit=100')
 
 i = 1
+
 # %% gets current file directory
 fileDir = os.path.dirname(os.path.realpath('__file__'))
 
@@ -56,20 +57,18 @@ for record in soup.table.findAll('span', {'class', 'whitespace_preserver'}):
         pdf_file.write(urllib.request.urlopen(pdf).read())
         pdf_file.close()
 
-        # join paths
-        files_dir = os.path.join(fileDir, "downloads")
-        import_files_dir = os.path.join(files_dir, '*.pdf')
-        import_files = [
-            folder_content for folder_content in glob.glob(import_files_dir)]
-        # extract the whole pdf in the directory and convert to csv
-        for pdf_filepath in import_files:
-            csv_filepath = pdf_filepath.replace('.pdf', '.csv')
-            tabula.convert_into(pdf_filepath, csv_filepath,
-                                lattice=True,  output_format="csv", pages="all")
-
-# %%
+# join paths
 files_dir = os.path.join(fileDir, "downloads")
-# files_dir
+import_files_dir = os.path.join(files_dir, '*.pdf')
+import_files = [
+    folder_content for folder_content in glob.glob(import_files_dir)]
+# extract the whole pdf in the directory and convert to csv
+for pdf_filepath in import_files:
+    csv_filepath = pdf_filepath.replace('.pdf', '.csv')
+    tabula.convert_into(pdf_filepath, csv_filepath,
+                        lattice=True,  output_format="csv", pages="all")
+
+
 # %%
 all_csv_files = glob.glob(os.path.join(files_dir, '*.csv'))
 # all_files
@@ -91,30 +90,5 @@ all_merged.to_csv(os.path.join(files_dir, 'merged.csv'))
 
 # https://realpython.com/python-data-cleaning-numpy-pandas/
 
-
-# %%
-# csv_merge = pandas.read_csv(df_from_file, sep=',',
-#                             encoding='unicode_escape', error_bad_lines=False)
-# csv_merge
-# files_dir = os.path.join(fileDir, "downloads")
-# files_dir
-# files_dir2 = "C:/Users/rotim/OneDrive - bwedu/Web Developmnet/ngn-debt-profile/scrapper/downloads"
-# # %%
-# tabula.convert_into_by_batch(files_dir, output_format='csv', pages=all)
-
-
-# # %%
-# # %%
-# import_files_dir = os.path.join(files_dir, '*.pdf')
-
-# # %%
-# import_files = [
-#     folder_content for folder_content in glob.glob(import_files_dir)]
-# # %%
-# for pdf_filepath in import_files:
-#     csv_filepath = pdf_filepath.replace('.pdf', '.csv')
-#     tabula.convert_into(pdf_filepath, csv_filepath,
-#                         lattice=True,  output_format="csv", pages="all")
-# # %%
 
 # %%
