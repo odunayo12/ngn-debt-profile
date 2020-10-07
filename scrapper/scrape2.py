@@ -7,8 +7,10 @@ from bs4 import BeautifulSoup
 import os
 import json
 import csv
-import pandas
+import pandas as pd
+import numpy as np
 from dateutil.parser import ParserError
+import re
 # %% page fetcher function
 
 
@@ -79,16 +81,55 @@ df_from_file = [item for item in all_csv_files]
 li = []
 
 for each_file in all_csv_files:
-    csv_merge = pandas.read_csv(
+    csv_merge = pd.read_csv(
         each_file, sep=',', encoding='unicode_escape', error_bad_lines=False)
     csv_merge['file'] = each_file.split('/')[-1]
     li.append(csv_merge)
 
-all_merged = pandas.concat(li)
+all_merged = pd.concat(li)
 all_merged.to_csv(os.path.join(files_dir, 'merged.csv'))
 # all_merged.tail(n=10)
 
 # https://realpython.com/python-data-cleaning-numpy-pandas/
 
 
+# %%
+files_dir = os.path.join(fileDir, "downloads")
+csv_all_in_one = pd.read_csv(os.path.join(files_dir, 'merged.csv'))
+# csv_all_in_one.head()
+
+
+# %%
+# add unique column
+csv_all_in_one["identifier"] = range(1, len(csv_all_in_one)+1)
+csv_all_in_one.set_index('identifier', inplace=True)
+
+# slice file urls into file names
+csv_all_in_one["filename"] = csv_all_in_one["file"].apply(
+    lambda x: x.split('\\')[9])
+csv_all_in_one.drop(columns="file", inplace=True)
+csv_all_in_one = csv_all_in_one.replace(',', '', regex=True)
+#csv_all_in_one = csv_all_in_one.replace(np.nan, 0)
+#csv_all_in_one.drop(columns=["file",  "Unnamed: 0"], inplace=True)
+
+# csv_all_in_one.loc[3]
+# csv_all_in_one.head()
+
+# %%
+csv_all_in_one.columns = csv_all_in_one.columns.str.replace("|\\r|\\n", "-")
+# print(csv_all_in_one.columns)
+# %%
+pattern_amt_o = re.compile(r"^\w")
+
+
+amt_o = csv_all_in_one["Amount Outstanding in-USD"].str.contains(pattern_amt_o)
+amt_o.head(n=20)
+
+# %%
+
+csv_all_in_one["debt_cat"] = np.where(csv_all_in_one["Debt Category"]
+                                      == "Grand-Total (A+B)", csv_all_in_one["Debt Category"],
+                                      np.where(csv_all_in_one["Amount Outstanding in-USD"].str.contains(pattern_amt_o), csv_all_in_one["Amount Outstanding in-USD"], ""))
+
+csv_all_in_one.head(n=10)
 # %%
