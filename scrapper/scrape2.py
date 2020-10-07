@@ -122,14 +122,24 @@ csv_all_in_one.columns = csv_all_in_one.columns.str.replace("|\\r|\\n", "-")
 pattern_amt_o = re.compile(r"^\w")
 
 
-amt_o = csv_all_in_one["Amount Outstanding in-USD"].str.contains(pattern_amt_o)
-amt_o.head(n=20)
+# amt_o = csv_all_in_one["Amount Outstanding in-USD"].str.contains(pattern_amt_o)
+# amt_o.head(n=20)
 
 # %%
 
 csv_all_in_one["debt_cat"] = np.where(csv_all_in_one["Debt Category"]
                                       == "Grand-Total (A+B)", csv_all_in_one["Debt Category"],
                                       np.where(csv_all_in_one["Amount Outstanding in-USD"].str.contains(pattern_amt_o), csv_all_in_one["Amount Outstanding in-USD"], ""))
+# %%
+csv_all_in_one["amt_in_usd_inM"] = np.where(csv_all_in_one["Debt Category"]
+                                            == "Grand-Total (A+B)", csv_all_in_one["Amount Outstanding in-USD"],
+                                            np.where(
+                                                csv_all_in_one["Amount Outstanding in-NGN"].isnull(), csv_all_in_one["Unnamed: 3"], csv_all_in_one["Amount Outstanding in-NGN"]))
+
 
 csv_all_in_one.head(n=10)
+
+
 # %%
+csv_all_in_one["amt_in_ngn_inM"] = np.where(csv_all_in_one["Amount Outstanding in-NGN"].isnull(
+), csv_all_in_one["Amount Outstanding-in NGN"], csv_all_in_one["Unnamed: 3"])
