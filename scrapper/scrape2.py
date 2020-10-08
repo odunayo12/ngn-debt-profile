@@ -94,6 +94,7 @@ all_merged.to_csv(os.path.join(files_dir, 'merged.csv'))
 
 
 # %%
+fileDir = os.path.dirname(os.path.realpath('__file__'))
 files_dir = os.path.join(fileDir, "downloads")
 csv_all_in_one = pd.read_csv(os.path.join(files_dir, 'merged.csv'))
 # csv_all_in_one.head()
@@ -120,26 +121,40 @@ csv_all_in_one.columns = csv_all_in_one.columns.str.replace("|\\r|\\n", "-")
 # print(csv_all_in_one.columns)
 # %%
 pattern_amt_o = re.compile(r"^\w")
-
+pattern_debt_cat = re.compile(r'(Total | Debt | FGN)')
 
 # amt_o = csv_all_in_one["Amount Outstanding in-USD"].str.contains(pattern_amt_o)
 # amt_o.head(n=20)
 
 # %%
 
-csv_all_in_one["debt_cat"] = np.where(csv_all_in_one["Debt Category"]
-                                      == "Grand-Total (A+B)", csv_all_in_one["Debt Category"],
-                                      np.where(csv_all_in_one["Amount Outstanding in-USD"].str.contains(pattern_amt_o), csv_all_in_one["Amount Outstanding in-USD"], ""))
+# csv_all_in_one["debt_cat"] = np.where(csv_all_in_one["Debt Category"]
+#                                       == "Grand-Total (A+B)", csv_all_in_one["Debt Category"],
+#                                       np.where(csv_all_in_one["Amount Outstanding in-USD"].str.contains(pattern_amt_o), csv_all_in_one["Amount Outstanding in-USD"], np.nan))
+
+csv_all_in_one["debt_cat"] = np.where((csv_all_in_one["Debt Category"].str.contains("Debt", regex=True)) | (csv_all_in_one["Debt Category"].str.contains("FGN", regex=True)) | (csv_all_in_one["Debt Category"].str.contains("Total", regex=True)), csv_all_in_one["Debt Category"],
+                                      np.where(csv_all_in_one["Amount Outstanding in-USD"].str.contains(pattern_amt_o), csv_all_in_one["Amount Outstanding in-USD"], np.nan))
 # %%
-csv_all_in_one["amt_in_usd_inM"] = np.where(csv_all_in_one["Debt Category"]
-                                            == "Grand-Total (A+B)", csv_all_in_one["Amount Outstanding in-USD"],
-                                            np.where(
-                                                csv_all_in_one["Amount Outstanding in-NGN"].isnull(), csv_all_in_one["Unnamed: 3"], csv_all_in_one["Amount Outstanding in-NGN"]))
+csv_all_in_one["amt_in_USD_inM"] = np.where(
+    csv_all_in_one["Debt Category"] == "Grand-Total (A+B)", csv_all_in_one["Amount Outstanding in-USD"], np.nan)
+
+# %%
+# factor with example 2 here: https://stackoverflow.com/a/39309626/13119339
+csv_all_in_one["amt_in_NGN_inM"] = np.where(
+    csv_all_in_one["Debt Category"] == "Grand-Total (A+B)", csv_all_in_one["Amount Outstanding in-NGN"], np.nan)
+csv_all_in_one["amt_in_NGN_inM"] = np.where(np.logical_and(csv_all_in_one["Debt Category"] == "Grand-Total (A+B)",
+                                                           csv_all_in_one["Amount Outstanding in-NGN"].isnull()), csv_all_in_one["Amount Outstanding-in NGN"], csv_all_in_one["amt_in_NGN_inM"])
+csv_all_in_one["amt_in_NGN_inM"] = np.where(
+    ((csv_all_in_one["Debt Category"] == "Grand-Total (A+B)") & (csv_all_in_one["Amount Outstanding in-NGN"].isnull()) & (csv_all_in_one["Amount Outstanding-in NGN"].isnull())), csv_all_in_one["Amount Outstanding in NGN"], csv_all_in_one["amt_in_NGN_inM"])
 
 
 csv_all_in_one.head(n=10)
-
+# %%
+# useful commands
+# csv_all_in_one.to_csv(os.path.join(files_dir, 'merged_wip_.csv'))
+# csv_all_in_one[csv_all_in_one["Debt Category"] == "Grand-Total (A+B)"]
+# csv_all_in_one["Debt Category"].unique()
 
 # %%
-csv_all_in_one["amt_in_ngn_inM"] = np.where(csv_all_in_one["Amount Outstanding in-NGN"].isnull(
+csv_all_in_one["amt_in_NGN_inM"] = np.where(csv_all_in_one["Amount Outstanding in-NGN"].isnull(
 ), csv_all_in_one["Amount Outstanding-in NGN"], csv_all_in_one["Unnamed: 3"])
