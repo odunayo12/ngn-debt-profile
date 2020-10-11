@@ -156,5 +156,17 @@ csv_all_in_one.head(n=10)
 # csv_all_in_one["Debt Category"].unique()
 
 # %%
-csv_all_in_one["amt_in_NGN_inM"] = np.where(csv_all_in_one["Amount Outstanding in-NGN"].isnull(
-), csv_all_in_one["Amount Outstanding-in NGN"], csv_all_in_one["Unnamed: 3"])
+# if true
+conditions_true = [csv_all_in_one["Debt Category"] == "Grand-Total (A+B)",
+                   np.logical_and(csv_all_in_one["Debt Category"] == "Grand-Total (A+B)",
+                                  csv_all_in_one["Amount Outstanding in-NGN"].isnull()),
+                   (csv_all_in_one["Debt Category"] == "Grand-Total (A+B)") & (csv_all_in_one["Amount Outstanding in-NGN"].isnull()) & (csv_all_in_one["Amount Outstanding-in NGN"].isnull())]
+
+# the take
+conditions_then = [csv_all_in_one["Amount Outstanding in-NGN"],
+                   csv_all_in_one["Amount Outstanding-in NGN"],
+                   csv_all_in_one["Amount Outstanding in NGN"]]
+# psor values
+csv_all_in_one["amt_in_NGN_inM"] = np.select(conditions_true,
+                                             conditions_then,
+                                             default=np.nan)

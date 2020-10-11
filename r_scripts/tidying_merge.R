@@ -38,6 +38,9 @@ merged_wip_test <-
       str_detect(Unnamed__0.1, "D(ebt)|Total|FGN") ~ Unnamed__0.1
     ),
     amt_in_USD_inM = case_when(
+      str_detect(Amount_Outstanding_in__USD, "[:alpha:]") &
+        is.na(Amount_Outstanding_in__NGN) &
+        is.na(Amount_Outstanding__in_NGN) ~ as.character(Amount_Outstanding_in_NGN),
       str_detect(Debt_Category, "[:alpha:]") &
         is.na(Amount_Outstanding_in__NGN) &
         is.na(Amount_Outstanding__in_NGN) &
@@ -45,9 +48,6 @@ merged_wip_test <-
       str_detect(Debt_Category, "Grand-Total|Debt|Total") &
         is.na(Amount_Outstanding_in__NGN) &
         is.na(Amount_Outstanding__in_NGN) ~ Unnamed__1,
-      str_detect(Amount_Outstanding_in__USD, "[:alpha:]") &
-        is.na(Amount_Outstanding_in__NGN) &
-        is.na(Amount_Outstanding__in_NGN) ~ as.character(Amount_Outstanding_in_NGN),
       str_detect(Amount_Outstanding_in__USD, "[:alpha:]") &
         is.na(Amount_Outstanding_in__NGN) ~ as.character(Amount_Outstanding__in_NGN),
       str_detect(Amount_Outstanding_in__USD, "[:alpha:]") ~ as.character(Amount_Outstanding_in__NGN),
@@ -60,6 +60,7 @@ merged_wip_test <-
         is.na(Amount_Outstanding__in_NGN) ~ Amount_Outstanding_in_NGN,
       str_detect(Debt_Category, "Grand-Total|Debt|Total") &
         is.na(Amount_Outstanding_in__NGN) ~ Amount_Outstanding__in_NGN,
-      str_detect(Debt_Category, "Grand-Total|Debt|Total") ~ Amount_Outstanding_in__NGN
+      str_detect(Debt_Category, "Grand-Total|Debt|Total") ~ Amount_Outstanding_in__NGN,
+      str_detect(Amount_Outstanding_in__USD, "[:alpha:]") ~ as.double(Unnamed__3)
     )
   )
