@@ -49,10 +49,6 @@ pattern_debt_cat = re.compile(r'(Total | Debt | FGN)')
 # amt_o.head(n=20)
 
 # %%
-
-# csv_all_in_one["debt_cat"] = np.where(csv_all_in_one["Debt Category"]
-#                                       == "Grand-Total (A+B)", csv_all_in_one["Debt Category"],
-#                                       np.where(csv_all_in_one["Amount Outstanding in-USD"].str.contains(pattern_amt_o), csv_all_in_one["Amount Outstanding in-USD"], np.nan))
 # na set to false because columns contain multiple value types. String, nan, numeric, say. Thus nan is handled as false vlues not meeting the truthy conditions.
 debt_cat_true = [(csv_all_in_one["Debt Category"].str.contains("Debt|FGN|Total", regex=True, na=False)),
                  csv_all_in_one["Amount Outstanding in-USD"].str.contains(
@@ -70,12 +66,7 @@ debt_cat_then = [csv_all_in_one["Debt Category"],
 csv_all_in_one["debt_cat"] = np.select(debt_cat_true,
                                        debt_cat_then,
                                        default=np.nan)
-# csv_all_in_one["debt_cat"] = np.where((csv_all_in_one["Debt Category"].str.contains("Debt", regex=True)) | (csv_all_in_one["Debt Category"].str.contains("FGN", regex=True)) | (csv_all_in_one["Debt Category"].str.contains("Total", regex=True)), csv_all_in_one["Debt Category"],
-#                                       np.where(csv_all_in_one["Amount Outstanding in-USD"].str.contains(pattern_amt_o), csv_all_in_one["Amount Outstanding in-USD"], np.nan))
 # %%
-# csv_all_in_one["amt_in_USD_inM"] = np.where(
-#     csv_all_in_one["Debt Category"] == "Grand-Total (A+B)", csv_all_in_one["Amount Outstanding in-USD"], np.nan)
-
 pattern_amt_usd = re.compile(r"Total|Debt")
 amt_in_USD_inM_true = [np.logical_and((csv_all_in_one["Amount Outstanding in-USD"].str.contains(pattern_amt_o, regex=True, na=False)),
                                       csv_all_in_one["Amount Outstanding in-NGN"].isnull()),
@@ -103,6 +94,8 @@ csv_all_in_one["amt_in_USD_inM"] = np.where((csv_all_in_one["Debt Category"].str
                                             (csv_all_in_one["Amount Outstanding-in NGN"].isnull()),
                                             csv_all_in_one["Unnamed: 1"],
                                             csv_all_in_one["amt_in_USD_inM"])
+
+
 # %%
 # useful commands
 # csv_all_in_one.loc[3]
