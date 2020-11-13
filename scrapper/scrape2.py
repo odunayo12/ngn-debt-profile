@@ -1,4 +1,5 @@
 # %%
+# pyright: reportUnboundVariable=false
 import glob
 import tabula
 import urllib
